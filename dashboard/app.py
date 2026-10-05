@@ -33,10 +33,11 @@ st.markdown("""
 
 # ─── Database Connection ─────────────────────────────────────────────────────
 DB_CONFIG = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': 'Mehul@2807',
-    'database': 'olist_ecommerce',
+    'host': st.secrets.get("MYSQL_HOST", 'localhost'),
+    'user': st.secrets.get("MYSQL_USER", 'root'),
+    'password': st.secrets.get("MYSQL_PASSWORD", 'Mehul@2807'),
+    'database': st.secrets.get("MYSQL_DATABASE", 'olist_ecommerce'),
+    'port': int(st.secrets.get("MYSQL_PORT", 3306)),
     'charset': 'utf8mb4',
     'use_unicode': True,
 }
@@ -144,10 +145,10 @@ if page == " Overview":
         c1, c2, c3 = st.columns(3)
         st.write('')
         c4, c5, c6 = st.columns(3)
-        c1.metric(" Total Orders", f"{kpi['total_orders'].iloc[0]:,}")
-        c2.metric(" Unique Customers", f"{kpi['total_customers'].iloc[0]:,}")
-        c3.metric(" Active Sellers", f"{kpi['total_sellers'].iloc[0]:,}")
-        c4.metric(" Total Revenue", f"R${kpi['total_revenue'].iloc[0]:,.0f}")
+        c1.metric(" Total Orders", f"{kpi['total_orders'].iloc[0]/1000:.1f}K")
+        c2.metric(" Unique Customers", f"{kpi['total_customers'].iloc[0]/1000:.1f}K")
+        c3.metric(" Active Sellers", f"{kpi['total_sellers'].iloc[0]/1000:.1f}K")
+        c4.metric(" Total Revenue", f"R${kpi['total_revenue'].iloc[0]/1000000:.1f}M")
         c5.metric(" Avg Review", f"{review_kpi['avg_score'].iloc[0]}/5")
         c6.metric(" Repeat Rate", f"{repeat_kpi['repeat_rate'].iloc[0]}%")
 
@@ -337,8 +338,8 @@ elif page == " Cohort Retention":
 
     if not repeat_stats.empty:
         c1, c2, c3, c4 = st.columns(4)
-        c1.metric("Total Customers", f"{repeat_stats['total_customers'].iloc[0]:,}")
-        c2.metric("One-Time Buyers", f"{repeat_stats['one_time'].iloc[0]:,}")
+        c1.metric("Total Customers", f"{repeat_stats['total_customers'].iloc[0]/1000:.1f}K")
+        c2.metric("One-Time Buyers", f"{repeat_stats['one_time'].iloc[0]/1000:.1f}K")
         c3.metric("Repeat Buyers", f"{repeat_stats['repeat_buyers'].iloc[0]:,}")
         c4.metric("Repeat Rate", f"{repeat_stats['repeat_rate'].iloc[0]}%", delta=f"Max: {repeat_stats['max_orders'].iloc[0]} orders")
 
